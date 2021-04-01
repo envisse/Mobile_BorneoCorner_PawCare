@@ -1,6 +1,5 @@
 # flutter_paw_care
 
-Progress UI 75 % 
 
 ## Getting Started
 
