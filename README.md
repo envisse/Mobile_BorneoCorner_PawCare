@@ -1,6 +1,6 @@
 # flutter_paw_care
 
-A new Flutter project.
+Progress UI 75 % 
 
 ## Getting Started
 
