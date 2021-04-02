@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_paw_care/const/color_padding.dart';
 import 'package:flutter_paw_care/data_handler/petshop_and_care.dart';
 import 'package:flutter_paw_care/data_handler/produt_list.dart';
+import 'grooming_and_styling.dart';
 
 //Tab petshop and care
 class PetshopCare extends StatefulWidget {
@@ -138,7 +139,7 @@ class PetShopDetail extends StatelessWidget {
                         children: [
                           ElevatedButton(
                             child: Text('Grooming'),
-                            onPressed: () {},
+                            onPressed: () {Navigator.push(context,MaterialPageRoute(builder: (context) => GroomingStyling()));},
                             style: ElevatedButton.styleFrom(
                               primary: Colors.green.shade600,
                               onPrimary: Colors.white,
