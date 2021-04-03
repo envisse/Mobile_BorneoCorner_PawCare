@@ -3,6 +3,7 @@ import 'package:flutter_paw_care/const/color_padding.dart';
 import 'package:flutter_paw_care/data_handler/artikel.dart';
 import 'package:flutter_paw_care/detail_artikel.dart';
 import 'package:flutter_paw_care/feature/cage_and_clean.dart';
+import 'package:flutter_paw_care/feature/go_vet.dart';
 
 //feature import link
 import 'package:flutter_paw_care/feature/halo_vet.dart';
@@ -46,12 +47,22 @@ class _BerandaTabState extends State<BerandaTab> {
                 menubutton(
                     icon: Icons.border_bottom_sharp,
                     navigator: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => PetshopCare()));
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => PetshopCare()));
                     },
                     text: 'Petshop and Care'),
+                //menu button GoVet
                 menubutton(
-                    icon: Icons.games_sharp, navigator: null, text: 'GoVet'),                
+                  icon: Icons.games_sharp,
+                  navigator: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => GoVet()));
+                  },
+                  text: 'GoVet',
+                ),
+
                 menubutton(
                     icon: Icons.edit_road,
                     navigator: null,

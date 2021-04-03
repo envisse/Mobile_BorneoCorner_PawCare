@@ -9,6 +9,10 @@
         android:name="io.flutter.app.FlutterApplication"
         android:label="flutter_paw_care"
         android:icon="@mipmap/ic_launcher">
+        <!-- API Keys Google Maps -->
+        <meta-data android:name="com.google.android.geo.API_KEY"
+               android:value="AIzaSyC9yVoBlyxlRXPf-KghvT5Vg3Ce_kUcpNU"/>
+               
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"
@@ -44,4 +48,6 @@
             android:name="flutterEmbedding"
             android:value="2" />
     </application>
+    <!-- permission -->
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 </manifest>
