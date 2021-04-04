@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_paw_care/const/color_padding.dart';
 import 'package:flutter_paw_care/data_handler/artikel.dart';
 import 'package:flutter_paw_care/detail_artikel.dart';
-import 'package:flutter_paw_care/feature/cage_and_clean.dart';
-import 'package:flutter_paw_care/feature/go_vet.dart';
+import 'package:location/location.dart';
 
 //feature import link
 import 'package:flutter_paw_care/feature/halo_vet.dart';
 import 'package:flutter_paw_care/feature/pet_shop_and_care.dart';
+import 'package:flutter_paw_care/feature/cage_and_clean.dart';
+import 'package:flutter_paw_care/feature/go_vet.dart';
 
 //Tab Beranda
 class BerandaTab extends StatefulWidget {
@@ -16,6 +17,8 @@ class BerandaTab extends StatefulWidget {
 }
 
 class _BerandaTabState extends State<BerandaTab> {
+  Location location = new Location();
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -57,8 +60,14 @@ class _BerandaTabState extends State<BerandaTab> {
                 menubutton(
                   icon: Icons.games_sharp,
                   navigator: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => GoVet()));
+                    location.requestPermission().then((permissionStatus) {
+                      if (permissionStatus == PermissionStatus.granted) {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => GoVet()));
+                      }
+                    });
                   },
                   text: 'GoVet',
                 ),

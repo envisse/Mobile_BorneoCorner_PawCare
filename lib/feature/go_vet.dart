@@ -87,7 +87,11 @@ class _GoVetState extends State<GoVet> {
                       });
                     },
                   )
-                : SizedBox(),
+                : Container(
+                    child: Center(
+                      child: Text('Loading...'),
+                    ),
+                  ),
           ),
         ),
         SizedBox(

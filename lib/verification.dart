@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_paw_care/const/color_padding.dart';
 import 'package:flutter_paw_care/home_screen/home_Screen.dart';
+import 'package:location/location.dart';
 
 //PAGE Verification_Phone_Number (PAGE 6)
 //menggunakan statful widget untuk verifikasi textfield jika kosong
@@ -41,12 +42,11 @@ class _InsertPhoneNumberState extends State<InsertPhoneNumber> {
                 //textfield_section
                 Container(
                   child: TextField(
-                    
                     decoration: InputDecoration(
                         hintText: 'Nomor HP',
                         prefixIcon: Icon(Icons.phone),
                         // prefixText: '+62    ',
-                        prefixStyle: TextStyle(color:Colors.black),
+                        prefixStyle: TextStyle(color: Colors.black),
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10)),
                         contentPadding:
@@ -190,6 +190,8 @@ class _InsertOTPNumberState extends State<InsertOTPNumber> {
 
 //PAGE Location_Confirmation (PAGE 8)
 class LocationConfirmation extends StatelessWidget {
+  Location location = new Location();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -239,7 +241,17 @@ class LocationConfirmation extends StatelessWidget {
                       child: Text('AKTIFKAN LOKASI',
                           style: TextStyle(
                               fontSize: 15, fontWeight: FontWeight.bold)),
-                      onPressed: () {},
+                      onPressed: () {
+                        location.requestPermission().then((permissionStatus) {
+                          if (permissionStatus == PermissionStatus.granted) {
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => HomeScreen()),
+                            );
+                          }
+                        });
+                      },
                     ),
                   ),
                   SizedBox(height: 5),
@@ -248,11 +260,12 @@ class LocationConfirmation extends StatelessWidget {
                         splashColor: Colors.transparent,
                         highlightColor: Colors.transparent),
                     child: FlatButton(
-                      onPressed: () {Navigator.pushReplacement(
+                      onPressed: () {
+                        Navigator.pushReplacement(
                           context,
-                          MaterialPageRoute(
-                              builder: (context) => HomeScreen()),
-                        );},
+                          MaterialPageRoute(builder: (context) => HomeScreen()),
+                        );
+                      },
                       child: Text(
                         'LEWATI',
                         style: TextStyle(
