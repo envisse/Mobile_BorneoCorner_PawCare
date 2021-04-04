@@ -1,6 +1,8 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_paw_care/const/color_padding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:location/location.dart';
 
 class GoVet extends StatefulWidget {
   @override
@@ -9,11 +11,47 @@ class GoVet extends StatefulWidget {
 
 class _GoVetState extends State<GoVet> {
   GoogleMapController mapController;
-
-  final LatLng _center = const LatLng(-0.509390, 117.169178);
+  LocationService locationService = LocationService();
+  Set<Marker> _markers;
 
   void _onMapCreated(GoogleMapController controller) {
     mapController = controller;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    //marker add
+    _markers = Set.from([]);
+  }
+
+  @override
+  void dispose() {
+    locationService.dispose();
+    super.dispose();
+  }
+
+  //for marker
+  Future<LatLng> getUserLocation() async {
+    LocationData currentLocation;
+
+    final location = Location();
+
+    try {
+      currentLocation = await location.getLocation();
+
+      final lat = currentLocation.latitude;
+
+      final lng = currentLocation.longitude;
+
+      final center = LatLng(lat, lng);
+
+      return center;
+    } on Exception {
+      currentLocation = null;
+
+      return null;
+    }
   }
 
   @override
@@ -23,16 +61,37 @@ class _GoVetState extends State<GoVet> {
         body: Column(
       children: [
         Expanded(
-          child: GoogleMap(
-            onMapCreated: _onMapCreated,
-            initialCameraPosition: CameraPosition(
-              target: _center,
-              zoom: 11.0,
-            ),
-            zoomControlsEnabled: false,
+          child: StreamBuilder<UserLocation>(
+            stream: locationService.locationstream,
+            builder: (context, snapshot) => (snapshot.hasData)
+                ? GoogleMap(
+                    onMapCreated: _onMapCreated,
+                    initialCameraPosition: CameraPosition(
+                      target: LatLng(
+                          snapshot.data.latitude, snapshot.data.longitude),
+                      zoom: 14.0,
+                    ),
+                    zoomControlsEnabled: false,
+                    myLocationEnabled: true,
+                    markers: _markers,
+                    onTap: (position) {
+                      setState(() {
+                        _markers.add(
+                          Marker(
+                            markerId: MarkerId(
+                                "${position.latitude}, ${position.longitude}"),
+                            icon: BitmapDescriptor.defaultMarker,
+                            position: position,
+                          ),
+                        );
+                      });
+                    },
+                  )
+                : SizedBox(),
           ),
         ),
         SizedBox(
+          height: null,
           child: Container(
             margin: EdgeInsets.symmetric(horizontal: MarginHorizontal),
             child: Column(
@@ -41,7 +100,10 @@ class _GoVetState extends State<GoVet> {
                 SizedBox(
                   height: 20,
                 ),
-                Text('Dimana Anda Sekarang ?',style: TextStyle(fontSize: Content_font_size),),
+                Text(
+                  'Dimana Anda Sekarang ?',
+                  style: TextStyle(fontSize: Content_font_size),
+                ),
                 SizedBox(
                   height: 10,
                 ),
@@ -64,4 +126,35 @@ class _GoVetState extends State<GoVet> {
       ],
     ));
   }
+}
+
+// statement get user location
+class UserLocation {
+  final double latitude;
+  final double longitude;
+
+  UserLocation({this.latitude, this.longitude});
+}
+
+class LocationService {
+  Location location = Location();
+  StreamController<UserLocation> _locationstreamcontroller =
+      StreamController<UserLocation>();
+  Stream<UserLocation> get locationstream => _locationstreamcontroller.stream;
+
+  LocationService() {
+    location.requestPermission().then((permissionStatus) {
+      if (permissionStatus == PermissionStatus.granted) {
+        location.onLocationChanged.listen((locationData) {
+          if (locationData != null) {
+            _locationstreamcontroller.add(UserLocation(
+                latitude: locationData.latitude,
+                longitude: locationData.longitude));
+          }
+        });
+      }
+    });
+  }
+
+  void dispose() => _locationstreamcontroller.close();
 }
