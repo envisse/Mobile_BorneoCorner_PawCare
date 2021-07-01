@@ -1,6 +1,6 @@
 # flutter_paw_care
 
-A new Flutter project.
+Project making Page for Paw_care application
 
 ## Getting Started
 
